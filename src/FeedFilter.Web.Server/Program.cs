@@ -63,7 +63,8 @@ internal class Program {
     app.MapControllers();
 
     if (adminUiEnabled) {
-      app.MapFallbackToFile("/index.html");
+      app.MapFallbackToFile("_{path}", "/index.html");
+      app.MapFallbackToFile("_edit/{id}", "/index.html");
     }
 
     app.Run();

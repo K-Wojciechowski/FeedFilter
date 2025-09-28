@@ -16,20 +16,29 @@ The .NET `System.Xml.Linq` library requires namespaces to be included in XPath e
 
 ## Configuration
 
-Feeds and their filtering rules must be configured. Feeds are configured using a REST API. Each field must have a unique ID, which becomes the URL under which the feed can be retrieved.
+Feeds and their filtering rules must be configured. There are two ways to configure the feeds: by using the API or the UI.
 
-The configuration API must be enabled in `appsettings.json`:
+The configuration API and UI must be enabled in `appsettings.json`:
 
 ```json
 {
   "Admin": {
     "Token": "your-secret-token",
-    "ApiEnabled": true
+    "ApiEnabled": true,
+    "UiEnabled": true
   }
 }
 ```
 
+### Configuration UI
+
+The configuration UI can be accessed in your Web browser by going to the `/_admin` endpoint of your FeedFilter server.
+
+### Configuration API
+
 All requests to the configuration API must have the token specified using an `Authorization: Bearer your-secret-token` header.
+
+Each field must have a unique ID, which becomes the URL under which the feed can be retrieved.
 
 To configure a feed, make a POST request to `/api/feeds/{feedId}`:
 
@@ -53,7 +62,7 @@ To configure a feed, make a POST request to `/api/feeds/{feedId}`:
 }
 ```
 
-Afterwards, the filtered feed will be available at `/{feedId}`. You can also POST to `/api/feeds/{feedId}/test` to see which rule was applied to which entry.
+If the feed is saved successfully, the filtered feed will be available at `/{feedId}`. You can also POST to `/api/feeds/{feedId}/test` to see which rule was applied to which entry.
 
 The decisions are interpreted as follows:
 
@@ -62,7 +71,7 @@ The decisions are interpreted as follows:
 * `promote` prepends a star emoji to the post title
 * `demote` prepends a trash can emoji to the post title
 
-### Example feed configuration call
+#### Example feed configuration call
 
 ```json
 {
@@ -90,7 +99,7 @@ The decisions are interpreted as follows:
 }
 ```
 
-### All endpoints
+#### All endpoints
 
 * `GET /api/feeds` and `GET /api/feeds/{feedId}` to see what is configured
 * `POST /api/feeds/{feedId}` to create/update a feed
@@ -107,4 +116,6 @@ The filtering appears to be working on a handful of feeds I care about, produced
 
 This code is licensed under the MIT license.
 
-None of the code in the `src` folder was created with AI/LLM assistance.
+The icon is based on [work by the Mozilla Foundation](https://commons.wikimedia.org/wiki/File:Feed-icon.svg), licensed under the MPL 1.1 license.
+
+None of the C# code in the `src` folder was created with AI/LLM assistance. Some of the TypeScript code was refactored by Claude Sonnet.

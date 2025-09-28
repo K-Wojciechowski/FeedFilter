@@ -45,7 +45,7 @@ export default function App(): ReactElement {
           <PasswordPrompt />
         ) : (
           <Container maxWidth="lg" component="main">
-            <Route path="/" component={ListPage} />
+            <Route path="/_admin" component={ListPage} />
             <Route path="/_create" component={() => <EditPage />} />
             <Route path="/_edit/:feedId" component={EditPage} />
             <Zoom key={location} in={location === "/"}>

@@ -15,10 +15,10 @@ interface FeedFilterState {
 
 const sortFeeds = (feeds: Feed[]): Feed[] =>
   feeds.sort((a, b) => {
-    if (a < b) {
+    if (a.feedId < b.feedId) {
       return -1;
     }
-    if (a > b) {
+    if (a.feedId > b.feedId) {
       return 1;
     }
     return 0;

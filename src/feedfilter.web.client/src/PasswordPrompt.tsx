@@ -26,7 +26,7 @@ export default function PasswordPrompt(): ReactElement {
   }, [init, tokenInput]);
 
   if (configuredToken != undefined) {
-    navigate("/");
+    navigate("/_admin");
     return <></>;
   }
 

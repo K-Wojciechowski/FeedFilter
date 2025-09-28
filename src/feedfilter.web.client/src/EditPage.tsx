@@ -203,7 +203,7 @@ export default function EditPage(props: EditPageProps): ReactElement {
     setSaveError(undefined);
     try {
       await save(feedId, buildFeedUpdate(true));
-      navigate("/");
+      navigate("/_admin");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setSaveError(e.toString());

@@ -24,6 +24,15 @@ public class PublicController(
     return PlainTextResponse("Hello, world!", 418);
   }
 
+  // This endpoint lets us serve the favicon even if static files are disabled.
+  [ApiExplorerSettings(IgnoreApi = true)]
+  [HttpGet("favicon.ico", Name = "Favicon")]
+  public IResult Favicon() {
+    var assembly = typeof(PublicController).Assembly;
+    var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.res.favicon.ico");
+    return stream == null ? Results.NotFound() : Results.Stream(stream, "image/x-icon");
+  }
+
   [ApiExplorerSettings(IgnoreApi = true)]
   [HttpGet("{feedId:regex(^[[a-z0-9-.]]+$)}", Name = "ProxyFeed")]
   public async Task<IActionResult> Get([FromRoute] string feedId, CancellationToken cancellationToken) {

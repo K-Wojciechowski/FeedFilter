@@ -28,4 +28,9 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="res\favicon.ico" />
+    <EmbeddedResource Include="res\favicon.ico" />
+  </ItemGroup>
+
 </Project>

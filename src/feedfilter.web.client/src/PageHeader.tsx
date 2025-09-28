@@ -27,7 +27,7 @@ export default function PageHeader(props: PageHeaderProps): ReactElement {
             aria-label="Go back"
             size="large"
             sx={{ width: "32px" }}
-            onClick={() => navigate("/")}>
+            onClick={() => navigate("/_admin")}>
             <ArrowBackIcon fontSize="inherit" />
           </IconButton>
         )}
