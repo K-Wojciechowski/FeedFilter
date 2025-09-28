@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AspNetCore.Proxy;
 using FeedFilter.Core;
 using FeedFilter.Database;
 using FeedFilter.Web.Server.Auth;
@@ -21,7 +20,6 @@ internal class Program {
     builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 
     // Our services and dependencies
-    builder.Services.AddProxies();
     builder.Services.AddDbContext<FeedFilterDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddScoped<IFeedFilterRepository, FeedFilterRepository>();
