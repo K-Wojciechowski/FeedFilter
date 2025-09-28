@@ -27,6 +27,8 @@ internal class Program {
     builder.Services.AddScoped<IFeedFilterRepository, FeedFilterRepository>();
     builder.Services.AddScoped<IFilteringEngine, FilteringEngine>();
     builder.Services.AddSingleton(TimeProvider.System);
+    builder.Services.AddHttpClient(Constants.ProxyHttpClientName)
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = true, MaxAutomaticRedirections = 3 });
 
     // Admin authentication
     var adminUiEnabled = builder.Configuration.GetValue("Admin:UiEnabled", false);

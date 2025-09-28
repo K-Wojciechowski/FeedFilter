@@ -29,6 +29,7 @@ public class PublicController(
     }
 
     var httpProxyOptions = HttpProxyOptionsBuilder.Instance
+        .WithHttpClientName(Constants.ProxyHttpClientName)
         .WithBeforeSend(BeforeSend)
         .WithAfterReceive((_, message) => AfterReceive(message, feed))
         .Build();

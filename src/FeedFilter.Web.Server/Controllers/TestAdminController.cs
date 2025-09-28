@@ -10,7 +10,7 @@ namespace FeedFilter.Web.Server.Controllers;
 [ApiController]
 [Route("api")]
 [Authorize]
-public class TestAdminController(IFilteringEngine engine, HttpClient httpClient, IFeedFilterRepository repository)
+public class TestAdminController(IFilteringEngine engine, IHttpClientFactory httpClientFactory, IFeedFilterRepository repository)
     : ControllerBase {
   [HttpPost("test", Name = "TestFeed")]
   public async Task<ActionResult<FeedFilteringResult>> TestFeed(
@@ -30,6 +30,7 @@ public class TestAdminController(IFilteringEngine engine, HttpClient httpClient,
   private async Task<ActionResult<FeedFilteringResult>> TestFeedCore(
       [FromBody] IFeed feed,
       CancellationToken cancellationToken) {
+    var httpClient = httpClientFactory.CreateClient(Constants.ProxyHttpClientName);
     var message = new HttpRequestMessage(HttpMethod.Get, feed.Url);
     message.Headers.UserAgent.TryParseAdd(Constants.UserAgentString);
     var response = await httpClient.SendAsync(message, cancellationToken).ConfigureAwait(false);

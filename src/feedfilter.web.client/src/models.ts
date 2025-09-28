@@ -25,3 +25,16 @@ export interface Rule {
   decision: Decision;
   comment: string | undefined;
 }
+
+export interface FeedFilteringResult {
+  feed: FeedUpdate;
+  originalXml: string;
+  filteredXml: string;
+  entryResults: EntryFilteringResult[];
+}
+
+export interface EntryFilteringResult {
+  entryTitle: string | undefined;
+  decidingRule: Rule | undefined;
+  decision: Decision;
+}
