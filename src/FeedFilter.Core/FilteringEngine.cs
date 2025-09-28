@@ -45,7 +45,10 @@ public class FilteringEngine(ILogger<FilteringEngine> logger) : IFilteringEngine
       }
     }
 
-    return new FeedFilteringResult(feed, xml, tree.ToString(), entryResults);
+
+    var filteredXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + tree.ToString().ReplaceLineEndings("\n");
+
+    return new FeedFilteringResult(feed, xml, filteredXml, entryResults);
   }
 
   private static XmlNamespaceManager GetXmlNamespaceManager(XmlTextReader reader) {
