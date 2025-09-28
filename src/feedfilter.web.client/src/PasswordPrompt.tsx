@@ -4,13 +4,14 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import useFeedFilterStore from "./state.ts";
+import { useLocation } from "wouter";
 
 export default function PasswordPrompt(): ReactElement {
   const configuredToken = useFeedFilterStore((state) => state.token);
   const loading = useFeedFilterStore((state) => state.loading);
 
-  const goToPage = useFeedFilterStore((state) => state.goToPage);
   const init = useFeedFilterStore((state) => state.init);
+  const [, navigate] = useLocation();
 
   const [tokenInput, setTokenInput] = useState("");
   const [error, setError] = useState(false);
@@ -19,13 +20,13 @@ export default function PasswordPrompt(): ReactElement {
     try {
       setError(false);
       await init(tokenInput);
-    } catch (error) {
+    } catch {
       setError(true);
     }
   }, [init, tokenInput]);
 
   if (configuredToken != undefined) {
-    goToPage("list");
+    navigate("/");
     return <></>;
   }
 
@@ -36,21 +37,28 @@ export default function PasswordPrompt(): ReactElement {
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}>
-      <form onSubmit={async (event) => {
-        event.preventDefault();
-        await doSubmit();
-      }}>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          await doSubmit();
+        }}>
         <TextField
           type="password"
           autoFocus
           error={error}
           value={tokenInput}
           disabled={loading}
-          onChange={e => setTokenInput(e.target.value)}
-          />
-        <IconButton color="primary" aria-label="Go" size="large" sx={{ ml: 1 }} type="submit" loading={loading}>
+          onChange={(e) => setTokenInput(e.target.value)}
+        />
+        <IconButton
+          color="primary"
+          aria-label="Go"
+          size="large"
+          sx={{ ml: 1 }}
+          type="submit"
+          loading={loading}>
           <ArrowCircleRightOutlinedIcon fontSize="inherit" />
         </IconButton>
       </form>

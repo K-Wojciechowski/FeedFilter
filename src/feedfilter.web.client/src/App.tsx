@@ -1,6 +1,7 @@
 import { type ReactElement } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Router, Route, useLocation } from "wouter";
 import PasswordPrompt from "./PasswordPrompt.tsx";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
@@ -17,45 +18,48 @@ const appTheme = createTheme({
       light: "#ffe0b2",
       main: "#ff9900",
       dark: "#e65200",
-      contrastText: "#000"
+      contrastText: "#000",
     },
     secondary: {
       light: "#bae2ff",
       main: "#0066ff",
       dark: "#2341e0",
-      contrastText: "#fff"
-    }
+      contrastText: "#fff",
+    },
   },
   typography: {
-    fontFamily: "system-ui, sans-serif"
-  }
+    fontFamily: "system-ui, sans-serif",
+  },
 });
 
 export default function App(): ReactElement {
-  const page = useFeedFilterStore((store) => store.page);
-  const goToPage = useFeedFilterStore((store) => store.goToPage);
-  const editedFeed = useFeedFilterStore((store) => store.editedFeed);
+  const [location, navigate] = useLocation();
+  const token = useFeedFilterStore((store) => store.token);
+  const isAuthenticated = token !== undefined;
 
   return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
-      {page === "auth" && <PasswordPrompt />}
-      {page !== "auth" && <>
-        <Container
-          maxWidth="lg"
-          component="main">
-          {page === "list" && <ListPage />}
-          {page === "create" && <EditPage mode="create" />}
-          {page === "edit" && <EditPage mode="edit" editedFeed={editedFeed} />}
-          <Zoom key={page} in={page === "list"}>
-            <Fab color="primary" aria-label="add" onClick={() => goToPage("create")}
-                 sx={{ position: "absolute", bottom: 16, right: 16 }}>
-              <AddIcon />
-            </Fab>
-          </Zoom>
-        </Container>
-      </>
-      }
+      <Router>
+        {!isAuthenticated ? (
+          <PasswordPrompt />
+        ) : (
+          <Container maxWidth="lg" component="main">
+            <Route path="/" component={ListPage} />
+            <Route path="/_create" component={() => <EditPage />} />
+            <Route path="/_edit/:feedId" component={EditPage} />
+            <Zoom key={location} in={location === "/"}>
+              <Fab
+                color="primary"
+                aria-label="add"
+                onClick={() => navigate("/_create")}
+                sx={{ position: "absolute", bottom: 16, right: 16 }}>
+                <AddIcon />
+              </Fab>
+            </Zoom>
+          </Container>
+        )}
+      </Router>
     </ThemeProvider>
   );
 }

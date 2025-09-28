@@ -15,12 +15,12 @@ export default function DecisionPicker(props: DecisionPickerProps) {
       fullWidth={true}
       id={props.id}
       value={props.value}
-      onChange={e => props.setValue(e.target.value as Decision)}
-      disabled={props.disabled}
-    >
+      onChange={(e) => props.setValue(e.target.value as Decision)}
+      disabled={props.disabled}>
       <MenuItem value="accept">Accept</MenuItem>
       <MenuItem value="reject">Reject</MenuItem>
       <MenuItem value="promote">Promote</MenuItem>
       <MenuItem value="demote">Demote</MenuItem>
-    </Select>);
+    </Select>
+  );
 }

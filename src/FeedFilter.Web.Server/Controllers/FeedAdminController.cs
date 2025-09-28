@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FeedFilter.Core.Models;
 using FeedFilter.Database;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ public class FeedAdminController(IFeedFilterRepository repository) : ControllerB
 
   [HttpPost("{feedId}", Name = "UpdateFeed")]
   [ProducesResponseType<Feed>(StatusCodes.Status200OK, "application/json")]
-  public async Task<ActionResult<Feed>> UpdateFeed([FromRoute] string feedId, [FromBody] FeedUpdate feedUpdate,
+  public async Task<ActionResult<Feed>> UpdateFeed([FromRoute, RegularExpression("^[a-z0-9-.]+$")] string feedId, [FromBody] FeedUpdate feedUpdate,
       CancellationToken cancellationToken) {
     await repository.SaveFeed(feedId, feedUpdate, cancellationToken).ConfigureAwait(false);
     return await repository.GetRequiredFeed(feedId, cancellationToken).ConfigureAwait(false);

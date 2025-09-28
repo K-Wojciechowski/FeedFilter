@@ -1,4 +1,5 @@
 import { useCallback, useState, type ReactElement } from "react";
+import { useLocation } from "wouter";
 import PageHeader from "./PageHeader.tsx";
 import Alert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
@@ -33,20 +34,20 @@ interface DeleteState {
 
 export default function ListPage(): ReactElement {
   const feeds = useFeedFilterStore((state) => state.feeds);
-  const startEditing = useFeedFilterStore((state) => state.startEditing);
   const callDeleteApi = useFeedFilterStore((state) => state.delete);
+  const [, navigate] = useLocation();
   const [copiedFeed, setCopiedFeed] = useState<string | undefined>(undefined);
   const [deleteState, setDeleteState] = useState<DeleteState>({
     visible: false,
     feedId: "",
     loading: false,
-    error: undefined
+    error: undefined,
   });
 
   const copyFeed = useCallback(async (feedId: string) => {
     await copyLink(feedId);
     setCopiedFeed(feedId);
-    setTimeout(() => setCopiedFeed(f => f === feedId ? undefined : f), 1000);
+    setTimeout(() => setCopiedFeed((f) => (f === feedId ? undefined : f)), 1000);
   }, []);
 
   const openDeleteDialog = useCallback((feedId: string) => {
@@ -54,87 +55,106 @@ export default function ListPage(): ReactElement {
   }, []);
 
   const closeDeleteDialog = useCallback(() => {
-    setDeleteState(s => ({ ...s, visible: false }));
+    setDeleteState((s) => ({ ...s, visible: false }));
   }, []);
 
-  const doDelete = useCallback(async (feedId: string | undefined) => {
-    if (feedId == undefined) return;
+  const doDelete = useCallback(
+    async (feedId: string | undefined) => {
+      if (feedId == undefined) return;
 
-    setDeleteState(s => ({ ...s, loading: true, error: undefined }));
+      setDeleteState((s) => ({ ...s, loading: true, error: undefined }));
 
-    try {
-      await callDeleteApi(feedId);
-      setDeleteState(s => ({ ...s, visible: false, error: undefined }));
-    } catch (e: any) {
-      setDeleteState(s => ({ ...s, loading: false, error: e.toString() }));
-    }
-  }, [callDeleteApi]);
+      try {
+        await callDeleteApi(feedId);
+        setDeleteState((s) => ({ ...s, visible: false, error: undefined }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        setDeleteState((s) => ({ ...s, loading: false, error: e.toString() }));
+      }
+    },
+    [callDeleteApi],
+  );
 
-  return <>
-    <PageHeader title={"Feeds"} showBackButton={false} />
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="feed table">
-        <TableHead>
-          <TableRow sx={{ th: { fontWeight: 600 } }}>
-            <TableCell>ID</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell sx={{ width: actionCellWidth }}>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {feeds.map((feed) => (
-            <TableRow
-              key={feed.feedId}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" sx={{ fontFamily: 'Monospace' }}>
-                {feed.feedId}
-              </TableCell>
-              <TableCell>{feed.description}</TableCell>
-              <TableCell sx={{ width: actionCellWidth }} align="right">
-                <Tooltip title={copiedFeed === feed.feedId ? "Copied!" : "Copy Link to Clipboard"}>
-                  <IconButton aria-label="copy" size="small"
-                              color={copiedFeed === feed.feedId ? "success" : undefined}
-                              disableRipple={copiedFeed === feed.feedId}
-                              onClick={() => copiedFeed === feed.feedId ? undefined : copyFeed(feed.feedId)}>
-                    <ContentCopyIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Edit">
-                  <IconButton aria-label="edit" size="small" onClick={() => startEditing(feed)}>
-                    <EditIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Delete">
-                  <IconButton aria-label="delete" size="small" onClick={() => openDeleteDialog(feed.feedId)}>
-                    <DeleteIcon fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
+  return (
+    <>
+      <PageHeader title={"Feeds"} showBackButton={false} />
+      <TableContainer component={Paper} sx={{ mb: 2 }}>
+        <Table sx={{ minWidth: 650 }} aria-label="feed table">
+          <TableHead>
+            <TableRow sx={{ th: { fontWeight: 600 } }}>
+              <TableCell>ID</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell sx={{ width: actionCellWidth }}>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    <Dialog
-      open={deleteState.visible}
-      onClose={closeDeleteDialog}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">Delete “{deleteState.feedId}”?</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {deleteState.error != undefined && <Alert severity="error">{deleteState.error}</Alert>}
-          This action cannot be undone.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => doDelete(deleteState.feedId)} loading={deleteState.loading}>Yes</Button>
-        <Button onClick={closeDeleteDialog} autoFocus disabled={deleteState.loading}>No</Button>
-      </DialogActions>
-    </Dialog>
-  </>;
+          </TableHead>
+          <TableBody>
+            {feeds.map((feed) => (
+              <TableRow
+                key={feed.feedId}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="row" sx={{ fontFamily: "Monospace" }}>
+                  {feed.feedId}
+                </TableCell>
+                <TableCell>{feed.description}</TableCell>
+                <TableCell sx={{ width: actionCellWidth }} align="right">
+                  <Tooltip
+                    title={copiedFeed === feed.feedId ? "Copied!" : "Copy Link to Clipboard"}>
+                    <IconButton
+                      aria-label="copy"
+                      size="small"
+                      color={copiedFeed === feed.feedId ? "success" : undefined}
+                      disableRipple={copiedFeed === feed.feedId}
+                      onClick={() =>
+                        copiedFeed === feed.feedId ? undefined : copyFeed(feed.feedId)
+                      }>
+                      <ContentCopyIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip title="Edit">
+                    <IconButton
+                      aria-label="edit"
+                      size="small"
+                      onClick={() => navigate(`/_edit/${feed.feedId}`)}>
+                      <EditIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip title="Delete">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      onClick={() => openDeleteDialog(feed.feedId)}>
+                      <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog
+        open={deleteState.visible}
+        onClose={closeDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">Delete “{deleteState.feedId}”?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {deleteState.error != undefined && <Alert severity="error">{deleteState.error}</Alert>}
+            This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => doDelete(deleteState.feedId)} loading={deleteState.loading}>
+            Yes
+          </Button>
+          <Button onClick={closeDeleteDialog} autoFocus disabled={deleteState.loading}>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }

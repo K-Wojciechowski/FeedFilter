@@ -18,7 +18,7 @@ public class PublicController(
     ILogger<PublicController> logger
 ) : ControllerBase {
   [ApiExplorerSettings(IgnoreApi = true)]
-  [HttpGet("{feedId}", Name = "ProxyFeed")]
+  [HttpGet("{feedId:regex(^[[a-z0-9-.]]+$)}", Name = "ProxyFeed")]
   public async Task Get([FromRoute] string feedId, CancellationToken cancellationToken) {
     var feed = await repository.GetFeed(feedId, cancellationToken).ConfigureAwait(false);
     if (feed == null) {

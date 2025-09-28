@@ -52,6 +52,10 @@ export default defineConfig({
       "^/api": {
         target,
         secure: false
+      },
+      "^/[a-z0-9-]+": {
+        target,
+        secure: false
       }
     },
     port: parseInt(env.DEV_SERVER_PORT || "44000"),
