@@ -1,4 +1,4 @@
-﻿using FeedFilter.Core.Models;
+using FeedFilter.Core.Models;
 
 namespace FeedFilter.Core;
 

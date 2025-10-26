@@ -1,4 +1,4 @@
-﻿import { type ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useLocation } from "wouter";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";

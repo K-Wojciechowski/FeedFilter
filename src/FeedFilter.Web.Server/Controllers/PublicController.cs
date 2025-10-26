@@ -21,7 +21,7 @@ public class PublicController(
   [ApiExplorerSettings(IgnoreApi = true)]
   [HttpGet("", Name = "Index")]
   public IActionResult Index() {
-    return PlainTextResponse("Hello, world!", 418);
+    return PlainTextResponse("", 418);
   }
 
   // This endpoint lets us serve the favicon even if static files are disabled.

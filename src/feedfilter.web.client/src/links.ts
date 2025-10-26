@@ -1,4 +1,4 @@
-﻿export function getLink(feedId: string): string {
+export function getLink(feedId: string): string {
   const urlString: string = location.href;
   const url = new URL(urlString);
   url.search = "";

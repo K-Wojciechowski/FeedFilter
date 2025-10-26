@@ -1,4 +1,4 @@
-﻿import type { Feed, FeedFilteringResult, FeedUpdate } from "./models.ts";
+import type { Feed, FeedFilteringResult, FeedUpdate } from "./models.ts";
 
 const fetchOptions = (token: string): RequestInit => ({
   headers: { Authorization: "Bearer " + token },

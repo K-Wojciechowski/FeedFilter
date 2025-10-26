@@ -1,4 +1,4 @@
-﻿using FeedFilter.Core.Enums;
+using FeedFilter.Core.Enums;
 using FeedFilter.Core.Models;
 using Shouldly;
 

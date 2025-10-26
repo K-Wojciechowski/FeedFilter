@@ -1,4 +1,4 @@
-﻿namespace FeedFilter.Core.Test;
+namespace FeedFilter.Core.Test;
 
 internal static class XmlSamples {
   public const string SimpleRss =
