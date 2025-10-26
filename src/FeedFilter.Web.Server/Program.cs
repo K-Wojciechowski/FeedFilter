@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FeedFilter.Web.Server;
 
 internal class Program {
-  public static void Main(string[] args) {
+  public static async Task Main(string[] args) {
     var builder = WebApplication.CreateBuilder(args);
 
     // Basic ASP.NET Core configuration
@@ -28,6 +28,7 @@ internal class Program {
     builder.Services.AddHttpClient(Constants.ProxyHttpClientName)
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = true, MaxAutomaticRedirections = 3 });
 
+    var migrationEnabled = builder.Configuration.GetValue("Database:MigrateOnStartup", false);
     // Admin authentication
     var adminUiEnabled = builder.Configuration.GetValue("Admin:UiEnabled", false);
     var adminApiEnabled = adminUiEnabled || builder.Configuration.GetValue("Admin:ApiEnabled", false);
@@ -67,6 +68,25 @@ internal class Program {
       app.MapFallbackToFile("_edit/{id}", "/index.html");
     }
 
-    app.Run();
+    if (migrationEnabled) {
+      for (var attempt = 0; attempt < 5; attempt++) {
+        using (var scope = app.Services.CreateScope()) {
+          var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+          try {
+            var db = scope.ServiceProvider.GetRequiredService<FeedFilterDbContext>();
+            await db.Database.MigrateAsync().ConfigureAwait(false);
+            logger.LogInformation("Database migration completed successfully");
+          } catch (Exception ex) {
+            logger.LogCritical(ex, "Database migration attempt {Attempt} failed: {Error}", attempt + 1, ex.Message);
+            if (attempt == 4) {
+              throw;
+            }
+            await Task.Delay(5000).ConfigureAwait(false);
+          }
+        }
+      }
+    }
+
+    await app.RunAsync().ConfigureAwait(false);
   }
 }

@@ -1,0 +1,25 @@
+services:
+  feedfilter:
+    image: ghcr.io/k-wojciechowski/feedfilter:latest
+    ports:
+      - 127.0.0.1:3333:3333
+    environment:
+      Admin__Token: "test"
+      Admin__ApiEnabled: "true"
+      Admin__UiEnabled: "true"
+      Database__MigrateOnStartup: "true"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Username=postgres;Password=postgres"
+      ASPNETCORE_URLS: "http://0.0.0.0:3333"
+
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+    - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data: {}
