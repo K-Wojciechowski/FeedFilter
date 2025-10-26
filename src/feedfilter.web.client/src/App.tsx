@@ -48,7 +48,7 @@ export default function App(): ReactElement {
             <Route path="/_admin" component={ListPage} />
             <Route path="/_create" component={() => <EditPage />} />
             <Route path="/_edit/:feedId" component={EditPage} />
-            <Zoom key={location} in={location === "/"}>
+            <Zoom key={location} in={location === "/_admin"}>
               <Fab
                 color="primary"
                 aria-label="add"

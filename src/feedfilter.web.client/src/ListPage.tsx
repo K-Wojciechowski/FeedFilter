@@ -1,5 +1,5 @@
 import { useCallback, useState, type ReactElement } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import PageHeader from "./PageHeader.tsx";
 import Alert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import MuiLink from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -74,6 +75,15 @@ export default function ListPage(): ReactElement {
     },
     [callDeleteApi],
   );
+
+  if (feeds.length === 0) {
+    return (
+      <>
+        <PageHeader title={"Feeds"} showBackButton={false} />
+        <Alert severity="info">No feeds configured. <MuiLink href="/_create" component={Link}>Add a feed</MuiLink></Alert>
+      </>
+    );
+  }
 
   return (
     <>
