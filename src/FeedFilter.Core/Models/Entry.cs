@@ -2,7 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace FeedFilter.Core;
+namespace FeedFilter.Core.Models;
 
 public record Entry(XElement Element, XmlNamespaceManager XmlNamespaceManager) {
   public XElement? TitleNode => Element.XPathSelectElement("*[local-name()='title']");

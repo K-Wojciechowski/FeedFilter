@@ -1,4 +1,3 @@
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using FeedFilter.Core.Enums;
@@ -8,11 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace FeedFilter.Core;
 
-public class FilteringEngine(ILogger<FilteringEngine> logger) : IFilteringEngine {
+internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlParser) : IFilteringEngine {
   public FeedFilteringResult Filter(IFeed feed, string xml) {
-    var reader = new XmlTextReader(xml, XmlNodeType.Document, null);
-    var tree = XDocument.Load(reader, LoadOptions.PreserveWhitespace);
-    var xmlNamespaceManager = GetXmlNamespaceManager(reader);
+    var (tree, xmlNamespaceManager) = xmlParser.Parse(xml);
     var entryResults = new List<EntryFilteringResult>();
 
     // Remove https://en.wikipedia.org/wiki/WebSub links and self links, which could allow feed readers to sidestep our filtering
@@ -49,14 +46,6 @@ public class FilteringEngine(ILogger<FilteringEngine> logger) : IFilteringEngine
     var filteredXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + tree.ToString().ReplaceLineEndings("\n");
 
     return new FeedFilteringResult(feed, xml, filteredXml, entryResults);
-  }
-
-  private static XmlNamespaceManager GetXmlNamespaceManager(XmlTextReader reader) {
-    var manager = new XmlNamespaceManager(reader.NameTable);
-    manager.AddNamespace("atom", "http://www.w3.org/2005/Atom");
-    manager.AddNamespace("content", "http://purl.org/rss/1.0/modules/content/");
-    manager.AddNamespace("dc", "http://purl.org/dc/elements/1.1/");
-    return manager;
   }
 
   private bool TestRule(Rule rule, Entry entry) {

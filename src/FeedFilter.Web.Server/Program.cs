@@ -23,7 +23,7 @@ internal class Program {
     builder.Services.AddDbContext<FeedFilterDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Services.AddScoped<IFeedFilterRepository, FeedFilterRepository>();
-    builder.Services.AddScoped<IFilteringEngine, FilteringEngine>();
+    builder.Services.AddFeedFilterCore();
     builder.Services.AddSingleton(TimeProvider.System);
     builder.Services.AddHttpClient(Constants.ProxyHttpClientName)
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = true, MaxAutomaticRedirections = 3 });
