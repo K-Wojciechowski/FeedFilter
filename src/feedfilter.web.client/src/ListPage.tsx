@@ -80,7 +80,12 @@ export default function ListPage(): ReactElement {
     return (
       <>
         <PageHeader title={"Feeds"} showBackButton={false} />
-        <Alert severity="info">No feeds configured. <MuiLink href="/_create" component={Link}>Add a feed</MuiLink></Alert>
+        <Alert severity="info">
+          No feeds configured.{" "}
+          <MuiLink href="/_create" component={Link}>
+            Add a feed
+          </MuiLink>
+        </Alert>
       </>
     );
   }
