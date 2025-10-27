@@ -12,6 +12,7 @@ namespace FeedFilter.Web.Server.Controllers;
 [Route("")]
 [AllowAnonymous]
 public class PublicController(
+    IConfiguration configuration,
     IFilteringEngine engine,
     IFeedFilterRepository repository,
     IHttpClientFactory httpClientFactory,
@@ -28,6 +29,12 @@ public class PublicController(
   [ApiExplorerSettings(IgnoreApi = true)]
   [HttpGet("favicon.ico", Name = "Favicon")]
   public IResult Favicon() {
+    var adminEnabled = configuration.GetValue("Admin:UiEnabled", false) || configuration.GetValue("Admin:ApiEnabled", false);
+
+    if (!adminEnabled) {
+      return Results.NotFound();
+    }
+
     var assembly = typeof(PublicController).Assembly;
     var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.res.favicon.ico");
     return stream == null ? Results.NotFound() : Results.Stream(stream, "image/x-icon");
