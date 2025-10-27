@@ -1,4 +1,3 @@
-using System.Xml.Linq;
 using System.Xml.XPath;
 using FeedFilter.Core.Enums;
 using FeedFilter.Core.Exceptions;

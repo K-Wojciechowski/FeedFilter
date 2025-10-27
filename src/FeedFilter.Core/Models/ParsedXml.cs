@@ -1,6 +1,5 @@
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 
 namespace FeedFilter.Core.Models;
 

@@ -108,6 +108,14 @@ The decisions are interpreted as follows:
 * `POST /api/feeds` to create/update many feeds
 * `POST /api/test` to test a feed without configuring it
 
+## Deployment
+
+This application is built in .NET, and it requires a PostgreSQL database. The easiest way to deploy it is by using Docker Compose.
+
+This repository includes a Docker Compose file. It configures FeedFilter and a PostgreSQL database. The Docker Compose file is configured to expose HTTP on port 3333 on localhost (it won’t be accessible from other machines); a reverse proxy (e.g. `nginx`) should be put in front to make it securely accessible to your feed reader.
+
+The Docker image is hosted on [GitHub Container Registry](https://github.com/K-Wojciechowski/FeedFilter/pkgs/container/feedfilter), with the latest release available as `docker pull ghcr.io/k-wojciechowski/feedfilter:latest`.
+
 ## Roadmap
 
 The filtering appears to be working on a handful of feeds I care about, produced by various generators (including, but not limited to, WordPress). There are still some more things to work on before this becomes usable. See [GitHub Issues](https://github.com/K-Wojciechowski/FeedFilter/issues) for more details.

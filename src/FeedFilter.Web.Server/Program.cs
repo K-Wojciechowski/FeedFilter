@@ -18,6 +18,10 @@ internal class Program {
       options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
     builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
+    builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSimpleConsole(options => {
+      options.IncludeScopes = true;
+      options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+    }));
 
     // Our services and dependencies
     builder.Services.AddDbContext<FeedFilterDbContext>(options =>
