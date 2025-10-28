@@ -1,9 +1,8 @@
 export function getLink(feedId: string): string {
-  const urlString: string = location.href;
-  const url = new URL(urlString);
+  const url = new URL(location.href);
   url.search = "";
   url.hash = "";
-  url.pathname += url.pathname.endsWith("/") ? feedId : `/${feedId}`;
+  url.pathname = url.pathname.replace(/\/_admin(\/.*)?$/, "/") + feedId;
   return url.toString();
 }
 
