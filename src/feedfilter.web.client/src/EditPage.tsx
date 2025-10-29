@@ -327,6 +327,7 @@ export default function EditPage(props: EditPageProps): ReactElement {
                     <TableHead>
                       <TableRow sx={{ th: { fontWeight: 600 } }}>
                         <TableCell>Title</TableCell>
+                        <TableCell>Tested Values</TableCell>
                         <TableCell>Decision</TableCell>
                         <TableCell>Rule&nbsp;#</TableCell>
                       </TableRow>
@@ -338,6 +339,15 @@ export default function EditPage(props: EditPageProps): ReactElement {
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                           <TableCell component="th" scope="row">
                             {result.entryTitle}
+                          </TableCell>
+                          <TableCell>
+                            <Typography sx={{ fontSize: "smaller", whiteSpace: "pre-wrap" }}>
+                              {result.testedValues != undefined
+                                ? "'" +
+                                  result.testedValues.join("', '").replace("\n", "\\n") +
+                                  "'"
+                                : "—"}
+                            </Typography>
                           </TableCell>
                           <TableCell>
                             <Typography

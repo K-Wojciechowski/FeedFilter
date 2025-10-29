@@ -36,5 +36,6 @@ export interface FeedFilteringResult {
 export interface EntryFilteringResult {
   entryTitle: string | undefined;
   decidingRule: Rule | undefined;
+  testedValues: string[] | undefined;
   decision: Decision;
 }

@@ -20,9 +20,20 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
     foreach (var entryNode in tree.XPathSelectElements("/rss/channel/item|/atom:feed/atom:entry", xmlNamespaceManager)
                  .ToList()) {
       var entry = new Entry(entryNode, xmlNamespaceManager);
-      var decidingRule = feed.Rules.FirstOrDefault(rule => TestRule(rule, entry));
+
+      Rule? decidingRule = null;
+      IReadOnlyCollection<string>? decidingValues = null;
+      foreach (var rule in feed.Rules) {
+        var values = GetFieldValuesToMatch(rule, entry);
+        if (values.Any(rule.Match)) {
+          decidingRule = rule;
+          decidingValues = values;
+          break;
+        }
+      }
+
       var decision = decidingRule?.Decision ?? feed.DefaultDecision;
-      entryResults.Add(new EntryFilteringResult(entry.Title, decidingRule, decision));
+      entryResults.Add(new EntryFilteringResult(entry.Title, decidingRule, decidingValues, decision));
 
       switch (decision) {
         case Decision.Accept:
@@ -47,7 +58,7 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
     return new FeedFilteringResult(feed, xml, filteredXml, entryResults);
   }
 
-  private bool TestRule(Rule rule, Entry entry) {
+  private IReadOnlyCollection<string> GetFieldValuesToMatch(Rule rule, Entry entry) {
     string[] xpaths = rule.Field switch {
         ItemField.Title => ["atom:title", "title"],
         ItemField.Author => ["atom:author/atom:name", "atom:author", "dc:creator", "author"],
@@ -66,7 +77,7 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
           "Unable to find '{Field}' in entry '{Entry}'. Tested XPaths: '{XPaths}'. Ignoring rule {RuleIndex}",
           rule.Field,
           entry, string.Join("', '", xpaths), rule.Index);
-      return false;
+      return [];
     }
 
     var values = new List<string>();
@@ -91,7 +102,7 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
             logger.LogInformation(
                 "Unable to find attribute '{Attribute}' in entry '{Entry}'. Ignoring rule {RuleIndex}",
                 rule.TestedAttributeName, entry, rule.Index);
-            return false;
+            return [];
           case 1:
             values.Add(attr[0].Value);
             break;
@@ -99,11 +110,11 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
             logger.LogInformation(
                 "Found multiple attributes named '{Attribute}' in entry '{Entry}'. Include the namespace to narrow it down. Ignoring rule {RuleIndex}",
                 rule.TestedAttributeName, entry, rule.Index);
-            return false;
+            return [];
         }
       }
     }
 
-    return values.Any(rule.Match);
+    return values;
   }
 }
