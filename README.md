@@ -48,7 +48,7 @@ Each field must have a unique ID, which becomes the URL under which the feed can
 
 <span id="feed-object"></span>
 
-To configure a feed, make a POST request to `/api/feeds/{feedId}` with a Feed object:
+To configure a feed, make a POST request to `/api/feeds/{feedId}` with a **Feed object**:
 
 ```typescript
 {
@@ -91,19 +91,19 @@ Before using XPath, make sure to read the [XML Hell](#xml-hell) section.
   "rules": [
     {
       "index": 10,
-      "field": "author",
-      "testType": "exact",
-      "testExpression": "John Doe",
-      "decision": "demote",
-      "comment": "Warn about John Doe's terrible writing"
-    },
-    {
-      "index": 20,
       "field": "title",
       "testType": "contains",
       "testExpression": "[Sponsor]",
       "decision": "reject",
       "comment": "Remove ads"
+    },
+    {
+      "index": 20,
+      "field": "author",
+      "testType": "exact",
+      "testExpression": "John Doe",
+      "decision": "demote",
+      "comment": "Warn about John Doe's terrible writing"
     }
   ]
 }
