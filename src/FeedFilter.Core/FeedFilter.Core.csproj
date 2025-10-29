@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\Directory.Build.props">
+      <Link>Directory.Build.props</Link>
+    </None>
+    <None Include="..\..\CHANGELOG.md">
+      <Link>CHANGELOG.md</Link>
+    </None>
     <None Include="..\..\README.md">
       <Link>README.md</Link>
     </None>

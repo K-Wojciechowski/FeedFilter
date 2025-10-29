@@ -1,5 +1,10 @@
 # FeedFilter Changelog
 
+## 1.1.0
+
+* Show tested values when testing feeds
+* Redirect from `/` to `/_admin` in frontend (for Vite dev server)
+
 ## 1.0.3
 
 * Fix copying links in admin UI (remove `_admin` from URL)
