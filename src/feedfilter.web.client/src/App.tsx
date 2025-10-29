@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Router, Route, useLocation } from "wouter";
+import { Redirect, Router, Route, useLocation } from "wouter";
 import PasswordPrompt from "./PasswordPrompt.tsx";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
@@ -48,6 +48,7 @@ export default function App(): ReactElement {
             <Route path="/_admin" component={ListPage} />
             <Route path="/_create" component={() => <EditPage />} />
             <Route path="/_edit/:feedId" component={EditPage} />
+            <Route path={/^\/$/} component={() => <Redirect to="/_admin" replace />} />
             <Zoom key={location} in={location === "/_admin"}>
               <Fab
                 color="primary"

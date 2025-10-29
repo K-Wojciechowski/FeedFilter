@@ -343,9 +343,7 @@ export default function EditPage(props: EditPageProps): ReactElement {
                           <TableCell>
                             <Typography sx={{ fontSize: "smaller", whiteSpace: "pre-wrap" }}>
                               {result.testedValues != undefined
-                                ? "'" +
-                                  result.testedValues.join("', '").replace("\n", "\\n") +
-                                  "'"
+                                ? "'" + result.testedValues.join("', '").replace("\n", "\\n") + "'"
                                 : "—"}
                             </Typography>
                           </TableCell>
