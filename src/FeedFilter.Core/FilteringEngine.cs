@@ -58,7 +58,7 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
     return new FeedFilteringResult(feed, xml, filteredXml, entryResults);
   }
 
-  private IReadOnlyCollection<string> GetFieldValuesToMatch(Rule rule, Entry entry) {
+  private List<string> GetFieldValuesToMatch(Rule rule, Entry entry) {
     string[] xpaths = rule.Field switch {
         ItemField.Title => ["atom:title", "title"],
         ItemField.Author => ["atom:author/atom:name", "atom:author", "dc:creator", "author"],
@@ -85,6 +85,8 @@ internal class FilteringEngine(ILogger<FilteringEngine> logger, IXmlParser xmlPa
     foreach (var element in elements) {
       if (rule.Field == ItemField.Link && element.Attribute("href") is { } hrefAttribute) {
         values.Add(hrefAttribute.Value);
+      } else if (rule.Field == ItemField.Category && element.Attribute("term") is { } termAttribute) {
+        values.Add(termAttribute.Value);
       } else if (rule.TestedAttributeName == null) {
         values.Add(element.Value);
       } else {
