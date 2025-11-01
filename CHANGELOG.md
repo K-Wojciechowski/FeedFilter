@@ -1,5 +1,9 @@
 # FeedFilter Changelog
 
+## 1.1.2
+
+* Add `/_healthcheck` endpoint
+
 ## 1.1.1
 
 * Support for filtering by categories specified with `<atom:category term="" />` tags (as prescribed by the Atom specification)

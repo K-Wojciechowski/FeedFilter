@@ -40,6 +40,35 @@ public class PublicController(
     return stream == null ? Results.NotFound() : Results.Stream(stream, "image/x-icon");
   }
 
+  [ApiExplorerSettings(IgnoreApi = false)]
+  [HttpGet("_healthcheck", Name = "HealthCheck")]
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  [ProducesResponseType(StatusCodes.Status404NotFound)]
+  [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+  public async Task<IResult> HealthCheck(CancellationToken cancellationToken)
+  {
+    try
+    {
+      var feeds = await repository.GetFeeds(cancellationToken).ConfigureAwait(false);
+      var feedCount = feeds.Count;
+      var ruleCount = feeds.Sum(f => f.Rules.Count);
+
+      if (feedCount == 0 || ruleCount == 0)
+      {
+        logger.LogWarning("Health check returns 404: {FeedCount} feeds, {RuleCount} rules", feedCount, ruleCount);
+        return Results.NotFound();
+      }
+
+      logger.LogTrace("Health check OK: {FeedCount} feeds, {RuleCount} rules", feedCount, ruleCount);
+      return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "Health check failed: An exception occurred");
+      return Results.InternalServerError();
+    }
+  }
+
   [ApiExplorerSettings(IgnoreApi = true)]
   [HttpGet("{feedId:regex(^[[a-z0-9-.]]+$)}", Name = "ProxyFeed")]
   public async Task<IActionResult> Get([FromRoute] string feedId, CancellationToken cancellationToken) {

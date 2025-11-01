@@ -124,6 +124,9 @@ Before using XPath, make sure to read the [XML Hell](#xml-hell) section.
 * `POST /api/test` to test a feed without configuring it
 
    Request body: a single [Feed object](#feed-object)
+* `GET /_healthcheck` to ensure the service is healthy
+
+   Status code: 204 if healthy, 404 if no valid feeds are found in the database (possibly due to a misconfiguration), 500 if unhealthy.
 
 *Hint:* The responses from GET endpoints can be passed into POST endpoints as-is. This can also be useful for importing and exporting the full configuration.
 
