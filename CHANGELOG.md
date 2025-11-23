@@ -1,5 +1,9 @@
 # FeedFilter Changelog
 
+## 1.2.0
+
+* Upgrade to .NET 10
+
 ## 1.1.2
 
 * Add `/_healthcheck` endpoint

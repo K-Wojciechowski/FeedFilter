@@ -1,5 +1,6 @@
 services:
   feedfilter:
+    restart: unless-stopped
     image: ghcr.io/k-wojciechowski/feedfilter:latest
     ports:
       - 127.0.0.1:3333:3333
@@ -10,11 +11,13 @@ services:
       Database__MigrateOnStartup: "true"
       ConnectionStrings__DefaultConnection: "Host=postgres;Username=postgres;Password=postgres"
       ASPNETCORE_URLS: "http://0.0.0.0:3333"
+    user: "33:33" # www-data on Debian-like systems
 
     depends_on:
       - postgres
 
   postgres:
+    restart: unless-stopped
     image: postgres:18-alpine
     environment:
       POSTGRES_PASSWORD: "postgres"

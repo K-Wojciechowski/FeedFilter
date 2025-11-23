@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FeedFilter.Core/FeedFilter.Core.csproj" />
+    <Project Path="src/FeedFilter.Database/FeedFilter.Database.csproj" />
+    <Project Path="src/feedfilter.web.client/feedfilter.web.client.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="src/FeedFilter.Web.Server/FeedFilter.Web.Server.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/FeedFilter.Core.Test/FeedFilter.Core.Test.csproj" />
+  </Folder>
+</Solution>
