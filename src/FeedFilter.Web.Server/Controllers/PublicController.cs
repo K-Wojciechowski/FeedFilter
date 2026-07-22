@@ -129,7 +129,7 @@ public class PublicController(
 
     if (response.StatusCode == HttpStatusCode.OK) {
       var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-      var result = engine.Filter(proxyContext.Feed, content);
+      var result = engine.Filter(proxyContext.Feed, content.TrimStart());
       var mediaType = response.Content.Headers.ContentType?.MediaType ?? "application/xml";
       var contentType = $"{mediaType}; charset=utf-8";
       logger.LogDebug("Returning successful filtered response for feed '{FeedId}'", feedId);

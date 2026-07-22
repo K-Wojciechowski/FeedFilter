@@ -1,5 +1,9 @@
 # FeedFilter Changelog
 
+## 1.2.1
+
+* Improve resiliency to bad XML - trim leading whitespace from retrieved feeds
+
 ## 1.2.0
 
 * Upgrade to .NET 10
