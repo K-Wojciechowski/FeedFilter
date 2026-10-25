@@ -1,5 +1,9 @@
 # FeedFilter Changelog
 
+## 1.2.1.1
+
+* Upgrade dependencies
+
 ## 1.2.1
 
 * Improve resiliency to bad XML - trim leading whitespace from retrieved feeds
